@@ -2,7 +2,6 @@
   "name": "tt",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/T-T---T-J",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

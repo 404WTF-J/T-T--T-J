@@ -1,13 +1,15 @@
 {
-  "name": "user-center",
+  "name": "tt",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/T-T---T-J",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "ant-design-vue": "^4.2.6",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
@@ -43,7 +45,12 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "indent": ["error", 2],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"],
+      "space-infix-ops": "error"
+    }
   },
   "browserslist": [
     "> 1%",

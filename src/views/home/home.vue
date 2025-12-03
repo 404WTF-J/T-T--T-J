@@ -1,6 +1,7 @@
 <template>
   <div class="container" id="welcome">
     <h3>嘿 你来啦 ❤️</h3>
+    <!-- <h3>进入</h3> -->
     <button id="enterBtn" @click="startTrip">开启旅程</button>
   </div>
 </template>
@@ -28,7 +29,8 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: linear-gradient(to right, #dbe6f6, #c5796d);
+  /* background: linear-gradient(to right, #dbe6f6, #c5796d); */
+  background: linear-gradient(to right, #9ba7ba, #b9a5a2);
 }
 
 h3 {
@@ -49,7 +51,7 @@ h3 {
   border: none;
   border-radius: 30px;
   background: #fff;
-  color: #ff69b4;
+  color: #c99eb3;
   font-size: 1.2em;
   cursor: pointer;
   transition: transform 0.3s;

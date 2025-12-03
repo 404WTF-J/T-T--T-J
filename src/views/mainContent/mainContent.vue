@@ -67,6 +67,7 @@ import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
 import timer from "@/components/timerCom/timerCom.vue";
 import { geci } from "@/assets/lsc/data.js";
 import router from "@/router";
+
 const hearts = ref([]);
 
 // 创建爱心动画函数

@@ -27,6 +27,22 @@
         </div>
       </div>
       <div class="musicbox">
+        <div class="Letterbox" id="letterBtn" @click="goletterPage">
+          <svg
+            t="1775633628065"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            width="20"
+            height="20"
+          >
+            <path
+              d="M799 158c87.482 0 158.566 70.209 159.979 157.354L959 318v388c0 87.482-70.209 158.566-157.354 159.979L799 866H225c-87.482 0-158.566-70.209-159.979-157.354L65 706V318c0-87.482 70.209-158.566 157.354-159.979L225 158h574z m-645.757 96.228l-0.165 0.184c-14.824 16.754-23.884 38.726-24.078 62.81V706c0 52.49 42.125 95.14 94.412 95.987L225 802h574c52.49 0 95.14-42.125 95.987-94.412L895 706V318c0-24.473-9.157-46.806-24.232-63.762a58.864 58.864 0 0 1-11.949 13.794l-0.63 0.526-244.521 201.22c-58.474 48.119-142.57 48.6-201.556 1.443l-1.78-1.443-244.52-201.22a58.971 58.971 0 0 1-12.57-14.33zM802 514.485c17.496 0 31.713 14.042 31.996 31.471l0.004 0.53v27.163c0 88.22-70.802 159.905-158.683 161.33l-2.668 0.021h-32.273c-17.673 0-32-14.327-32-32 0-17.496 14.042-31.713 31.47-31.996l0.53-0.004h32.273c53.228 0 96.478-42.718 97.338-95.741l0.013-1.61v-27.164c0-17.673 14.327-32 32-32zM806.753 228H217.246l233.753 192.36c34.734 28.582 84.534 29.151 119.868 1.706l1.066-0.84 1.068-0.867L806.753 228z"
+              fill="#979797"
+              p-id="16626"
+            ></path>
+          </svg>
+        </div>
         <div class="ListenBox" id="listenBtn" @click="gosinerPage">
           特别的人
           <span class="music-note">♪</span>
@@ -63,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, reactive, onMounted, onUnmounted, nextTick } from "vue";
 import timer from "@/components/timerCom/timerCom.vue";
 import { geci } from "@/assets/lsc/data.js";
 import router from "@/router";
@@ -220,6 +236,11 @@ const gopicareaPage = () => {
   router.push("/Picarea");
 };
 
+// 跳转到letter页
+const goletterPage = () => {
+  router.push("/Letter");
+};
+
 onMounted(() => {
   // 生命周期钩子
   setInterval(createHearts, 300);
@@ -334,6 +355,16 @@ onUnmounted(() => {
   to {
     opacity: 1;
   }
+}
+
+/* 信件按钮 */
+.Letterbox {
+  position: absolute;
+  text-align: center;
+  left: 15px;
+  top: 20px;
+  font-size: 20px;
+  padding: 2px;
 }
 
 /* 收听按钮 */

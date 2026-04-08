@@ -21,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "picarea",
     component: () => import("@/views/picarea/picarea.vue"),
   },
+  {
+    path: "/Letter",
+    name: "letter",
+    component: () => import("@/views/lettercom/letterView.vue"),
+  },
 ];
 
 const router = createRouter({

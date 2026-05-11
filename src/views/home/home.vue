@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="container" id="welcome">
     <h3>嘿 你来啦 ❤️</h3>

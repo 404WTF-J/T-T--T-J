@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div
     class="pictureArea"
@@ -65,14 +66,7 @@
 </template>
 
 <script setup>
-import {
-  ref,
-  reactive,
-  computed,
-  onMounted,
-  nextTick,
-  onBeforeUnmount,
-} from "vue";
+import { ref, onMounted, nextTick, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
@@ -92,7 +86,6 @@ const swiperList = ref(null);
 const swiperImg = ref(null);
 let currentIndex = ref(0);
 let timer = null;
-let timer1 = null;
 
 const images = ref([
   {
@@ -191,7 +184,7 @@ const initAnimations = () => {
 // 初始化滚动触发动画
 const initScrollAnimations = () => {
   // 图片进入视口时的动画
-  gsap.utils.toArray(".photo-show").forEach((photo, index) => {
+  gsap.utils.toArray(".photo-show").forEach((photo) => {
     gsap.from(photo.querySelector(".image-wrapper"), {
       scrollTrigger: {
         trigger: photo,
@@ -331,7 +324,8 @@ onBeforeUnmount(() => {
 .pictureArea {
   width: 100%;
   height: 100%;
-  background: url("https://picsum.photos/seed/picarea/800/600") no-repeat center center;
+  background: url("https://picsum.photos/seed/picarea/800/600") no-repeat center
+    center;
   /* background: linear-gradient(to right, #84c8f5, #6dd5fa, #dbf9fb); */
   background-size: 150% 150%;
   position: fixed;
@@ -349,7 +343,7 @@ onBeforeUnmount(() => {
   opacity: 0.3;
   transition: all 0.5s;
   cursor: pointer;
-  color: #fbfafa;
+  color: #565454;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }

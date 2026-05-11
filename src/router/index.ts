@@ -26,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "letter",
     component: () => import("@/views/lettercom/letterView.vue"),
   },
+  {
+    path: "/MessageBoard",
+    name: "messageBoard",
+    component: () => import("@/views/messageBoard/messageBoard.vue"),
+  },
 ];
 
 const router = createRouter({

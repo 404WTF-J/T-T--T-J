@@ -22,8 +22,17 @@
           </div>
         </div>
 
-        <div class="picareabtn" id="picareabtn" @click="gopicareaPage">
-          <span>more</span>
+        <div class="contentList">
+          <div
+            class="Messageboard picareabtn"
+            id="messageboard"
+            @click="gomessagePage"
+          >
+            <span>留言板</span>
+          </div>
+          <div class="picareabtn" id="picareabtn" @click="gopicareaPage">
+            <span>more</span>
+          </div>
         </div>
       </div>
       <div class="musicbox">
@@ -230,6 +239,12 @@ const gosinerPage = () => {
   router.push("/Spmusic");
 };
 
+//跳转到留言板页
+const gomessagePage = () => {
+  audioRef.value.pause();
+  router.push("/MessageBoard");
+};
+
 // 跳转到pic页
 const gopicareaPage = () => {
   audioRef.value.pause();
@@ -391,6 +406,14 @@ onUnmounted(() => {
   top: 20px;
   opacity: 0.5;
   /* background-color: #0a0a0a; */
+}
+
+.contentList {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .picareabtn {

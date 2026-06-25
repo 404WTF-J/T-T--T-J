@@ -2,7 +2,7 @@
   <div class="mail-page-container">
     <!-- 顶部返回 -->
     <div class="back-btn" @click="goBack">
-      <span v-if="isOpened"
+      <span
         ><svg
           t="1775638553773"
           class="icon"
@@ -31,19 +31,45 @@
         <!-- 1. 信纸内容 -->
         <div class="letter-paper">
           <div class="letter-content">
-            <h2 class="letter-title">致 亲爱的</h2>
+            <h2 class="letter-title">
+              {{
+                state.letters[0]?.letterTitle
+                  ? state.letters[0]?.letterTitle
+                  : "致 亲爱的"
+              }}
+            </h2>
             <div class="letter-body">
-              <p>见字如面。</p>
               <p>
-                在这个喧嚣的世界里，我把所有未曾说出口的温柔，都折叠进了这封信里。
+                {{
+                  state.letters[0]?.firstregard
+                    ? state.letters[0]?.firstregard
+                    : "见字如面"
+                }}
               </p>
               <p>
+                {{
+                  state.letters[0]?.content
+                    ? state.letters[0]?.content
+                    : "愿你的梦里有星星，醒来有暖阳。"
+                }}
+              </p>
+              <!-- <p>
                 当你打开它的时候，希望窗外的风也是甜的。无论此刻你身在何处，请记得，有一个人，在静静地守候着你的情绪。
+              </p> -->
+              <p class="highlight">
+                {{
+                  state.letters[0]?.endingregard
+                    ? state.letters[0]?.endingregard
+                    : "愿你的梦里有星星，醒来有暖阳。"
+                }}
               </p>
-              <p class="highlight">“愿你的梦里有星星，醒来有暖阳。”</p>
               <div class="signature">
                 <p>—— 永远陪伴你的</p>
-                <p class="date">404</p>
+                <p class="date">
+                  {{
+                    state.letters[0]?.sender ? state.letters[0]?.sender : 404
+                  }}
+                </p>
               </div>
             </div>
           </div>
@@ -73,10 +99,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
+import { loadLetters } from "@/utils/CloudStore.js";
 const router = useRouter();
 const isOpened = ref(false);
+const state = reactive({
+  letters: [],
+});
+
+// 页面加载时，加载信件内容
+onMounted(async () => {
+  const res = await loadLetters();
+  if (res) {
+    state.letters = res;
+  }
+  console.log(state.letters);
+});
 
 const goBack = () => {
   router.back();

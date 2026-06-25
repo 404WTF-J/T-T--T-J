@@ -92,8 +92,12 @@ import { ref, reactive, onMounted, onUnmounted, nextTick } from "vue";
 import timer from "@/components/timerCom/timerCom.vue";
 import { geci } from "@/assets/lsc/data.js";
 import router from "@/router";
+import { getHomePoems } from "@/utils/CloudStore.js";
 
 const hearts = ref([]);
+const state = reactive({
+  poemList: [],
+});
 
 // 创建爱心动画函数
 function createHearts() {
@@ -112,6 +116,21 @@ function createHearts() {
     }, 5000);
   }
 }
+
+//接口诗句处理
+const cutPoem = (poemStr) => {
+  //判断数据是否为空
+  if (typeof poemStr !== "string" || poemStr.trim() === "") return null;
+  // 先统一替换英文逗号为中文逗号，或者直接用英文逗号分割
+  const poem = poemStr.replace(/,/g, "，");
+  const FirstTitle = poem.split("，");
+  return {
+    title: FirstTitle[0],
+    lines: FirstTitle.slice(1)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0),
+  };
+};
 
 //控制poem的显示
 const poems = [
@@ -149,8 +168,8 @@ const currentPoem = ref(null);
 function getRandomIndex(excludeIndex) {
   let idx;
   do {
-    idx = Math.floor(Math.random() * poems.length);
-  } while (idx === excludeIndex && poems.length > 1);
+    idx = Math.floor(Math.random() * state.poemList.length);
+  } while (idx === excludeIndex && state.poemList.length > 1);
   return idx;
 }
 
@@ -256,9 +275,22 @@ const goletterPage = () => {
   router.push("/Letter");
 };
 
-onMounted(() => {
-  // 生命周期钩子
-  setInterval(createHearts, 300);
+onMounted(async () => {
+  // 持续调用创建爱心函数
+  // setInterval(createHearts, 300);
+
+  // 获取诗句
+  const res = await getHomePoems();
+  state.poemList = res
+    .filter(
+      (item) =>
+        typeof item.PoemContent === "string" && item.PoemContent.trim() !== ""
+    )
+    .map((item) => cutPoem(item.PoemContent));
+  // console.log(state.poemList, "处理后的诗句287");
+
+  // 随机选一首诗
+  // 随机选一个索引
   // 读取上次显示的索引
   const lastIndex = sessionStorage.getItem("lastPoemIndex");
   const lastIdxNum = lastIndex !== null ? parseInt(lastIndex) : -1;
@@ -267,7 +299,7 @@ onMounted(() => {
   const newIndex = getRandomIndex(lastIdxNum);
 
   // 设置当前诗歌
-  currentPoem.value = poems[newIndex];
+  currentPoem.value = state.poemList[newIndex];
 
   // 记录当前索引到 sessionStorage
   sessionStorage.setItem("lastPoemIndex", newIndex);
@@ -338,6 +370,7 @@ onUnmounted(() => {
   line-height: 1.8;
   max-width: 600px;
   padding: 0 20px;
+  margin-top: 130px;
 }
 
 .poem1,
@@ -414,10 +447,11 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 40px;
 }
 
 .picareabtn {
-  width: 90px;
+  width: 80px;
   height: 30px;
   line-height: 30px;
   border-radius: 15px;

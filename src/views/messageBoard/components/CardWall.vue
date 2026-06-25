@@ -61,7 +61,8 @@
 
 <script setup>
 import { ref, computed, defineProps, createVNode, defineEmits } from "vue";
-import { formatTime, deleteMessage } from "../lib/Storage";
+// import { formatTime, deleteMessage } from "../lib/Storage";
+import { formatTime, deleteMessage } from "@/utils/CloudStore.js";
 import {
   CloseOutlined,
   ExclamationCircleOutlined,
@@ -76,11 +77,17 @@ const emit = defineEmits(["refresh"]);
 const pageSize = 6; // 每页最多 6 张卡片
 const currentPage = ref(1);
 const flippedCards = ref(new Set());
-const totalPages = computed(
-  () => Math.ceil(props.messages.length / pageSize) || 1
-);
+const totalPages = computed(() => {
+  // 如果 messages 不存在或不是数组，默认为 1 页（或者 0）
+  if (!props.messages || !Array.isArray(props.messages)) return 1;
+  return Math.ceil(props.messages.length / pageSize) || 1;
+});
 
+// 修改 2: pagedMessages 增加防御性判断
 const pagedMessages = computed(() => {
+  // 如果 messages 不存在或不是数组，直接返回空数组
+  if (!props.messages || !Array.isArray(props.messages)) return [];
+
   const start = (currentPage.value - 1) * pageSize;
   const end = start + pageSize;
   return props.messages.slice(start, end);
@@ -110,11 +117,23 @@ function deleteCard(msgId) {
     content: "确定要删除这张卡片吗？",
     okText: "确定",
     cancelText: "取消",
-    onOk() {
-      deleteMessage(msgId);
-      message.success("删除成功");
-      flippedCards.value.delete(msgId);
-      emit("refresh");
+    async onOk() {
+      try {
+        // 1. 调用后端删除
+        const success = await deleteMessage(msgId);
+
+        if (success) {
+          message.success("删除成功");
+          flippedCards.value.delete(msgId);
+
+          // 2. 通知父组件刷新
+          // 为了解决闪烁，建议父组件收到 refresh 后，先本地过滤掉这个 ID，再去请求云端
+          emit("refresh", msgId);
+        }
+      } catch (error) {
+        message.error("删除失败，请重试");
+        console.error(error);
+      }
     },
     onCancel() {
       message.info("已取消删除");
@@ -215,13 +234,13 @@ function getCardClass(sender) {
 
 /* 正面 */
 .card-front.warm {
-  background: linear-gradient(135deg, #fff5f8, #ffe8f0);
-  border: 1.5px solid #f0d0e0;
+  background: linear-gradient(135deg, #f5f8ff, #b6c8eb);
+  border: 1.5px solid #d0e0f0;
 }
 
 .card-front.cool {
-  background: linear-gradient(135deg, #f5f8ff, #e8f0ff);
-  border: 1.5px solid #d0e0f0;
+  background: linear-gradient(135deg, #fff5f8, #dbbec8);
+  border: 1.5px solid #f0d0e0;
 }
 
 .card-avatar {

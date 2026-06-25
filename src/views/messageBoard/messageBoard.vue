@@ -3,7 +3,7 @@
     <!-- 返回按钮 -->
     <div class="pichenxin" id="pichenxin" @click="router.push('/mainContent')">
       <span
-        v-for="(char, index) in '下次再看'"
+        v-for="(char, index) in '下次再聊'"
         :key="index"
         class="skewed-char"
       >
@@ -51,7 +51,7 @@
 
       <div class="nav-buttons">
         <button class="nav-remind-btn" @click="goToWall">
-          📬 翻开回忆角落 ({{ messages.length }})
+          📬 翻开回忆角落 ({{ messages.length > 0 ? messages.length : "0" }})
         </button>
       </div>
     </template>
@@ -79,13 +79,20 @@ import { ref, reactive, computed, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import MessageForm from "./components/MessageForm.vue";
 import CardWall from "./components/CardWall.vue";
+// import {
+//   loadMessages,
+//   saveMessages,
+//   loadConfig,
+//   saveConfig,
+//   DEFAULT_CONFIG,
+// } from "./lib/Storage";
 import {
   loadMessages,
   saveMessages,
   loadConfig,
   saveConfig,
   DEFAULT_CONFIG,
-} from "./lib/Storage";
+} from "@/utils/CloudStore.js";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -98,6 +105,7 @@ onMounted(async () => {
 
   // 初始化页面动画
   initAnimations();
+  inintmeassage();
 });
 
 // 初始化基础动画
@@ -117,7 +125,7 @@ const initAnimations = () => {
 const router = useRouter();
 
 // ========== 状态 ==========
-const messages = ref(loadMessages());
+const messages = ref([]);
 const partnerConfig = reactive(loadConfig());
 const currentSender = ref("A");
 const showEditName = ref(false);
@@ -134,20 +142,44 @@ const senderAvatar = computed(() =>
 );
 
 // ========== 方法 ==========
-function addMessage(content) {
+async function inintmeassage() {
+  messages.value = await loadMessages();
+}
+
+async function addMessage(content) {
+  // 1. 防御性检查：确保 messages.value 是数组
+  if (!Array.isArray(messages.value)) {
+    messages.value = [];
+  }
+
   const newMsg = {
-    id: Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
     sender: currentSender.value,
     content,
     timestamp: Date.now(),
   };
   messages.value.unshift(newMsg);
-  saveMessages(messages.value);
+
+  const success = await saveMessages(messages.value);
+  if (success) {
+    await loadMessages();
+  } else {
+    console.error("消息保存失败");
+  }
 }
 
-function handleRefresh() {
-  messages.value = loadMessages();
-  console.log("刷新消息列表", messages.value);
+async function handleRefresh(deletedId = null) {
+  // 1. 如果传入了要删除的 ID，先在本地数组中移除它（乐观更新）
+  if (deletedId) {
+    messages.value = messages.value.filter((msg) => msg.id !== deletedId);
+  }
+
+  // 2. 再去云端拉取最新数据，确保最终一致性
+  const latestMessages = await loadMessages();
+
+  // 3. 更新列表
+  if (Array.isArray(latestMessages)) {
+    messages.value = latestMessages;
+  }
 }
 
 function handleSubmit(content) {
@@ -195,7 +227,7 @@ function goBack() {
 <style scoped>
 .board {
   width: 100%;
-  max-width: 480px;
+  /* max-width: 480px; */
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(120, 60, 80, 0.08),
@@ -295,7 +327,7 @@ function goBack() {
 }
 
 .save-name-btn {
-  padding: 6px 16px;
+  padding: 6px 12px;
   border-radius: 30px;
   background: #e75480;
   color: white;

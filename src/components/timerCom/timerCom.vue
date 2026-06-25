@@ -33,7 +33,7 @@
       <div class="timer-face right"></div>
       <div class="timer-face left"></div>
       <div class="timer-face top"></div>
-      <div class="timer-face bottom">相识数据</div>
+      <div class="timer-face bottom">心动时长</div>
     </div>
   </div>
 </template>

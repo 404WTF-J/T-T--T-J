@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <div class="Spmusic">
     <div class="musicbigBox" id="musicbigBox">
@@ -40,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, nextTick } from "vue";
+import { ref, reactive, onMounted, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { geci } from "@/assets/lsc/data.js";
 
@@ -49,8 +50,9 @@ const router = useRouter();
 //歌词的展示
 const rawLyrics = geci;
 const audioRef = ref(null);
-const audioSrc =
-  "https://raw.githubusercontent.com/404WTF-J/TestLink/9cc8a4f85063c6f00317737986c0b390c4c2e8a1/Luckyfile/asseset/video/Special%20someone.mp3";
+const audioSrc = ref(
+  "https://raw.githubusercontent.com/404WTF-J/TestLink/9cc8a4f85063c6f00317737986c0b390c4c2e8a1/Luckyfile/asseset/video/Special%20someone.mp3"
+);
 const poemBoxRef = ref(null);
 const poemListRef = ref(null);
 const liRefs = ref([]); // 存储每个li元素的引用

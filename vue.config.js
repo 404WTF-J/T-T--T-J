@@ -14,4 +14,20 @@ module.exports = defineConfig({
       },
     },
   },
+  devServer: {
+    proxy: {
+      "/github-api": {
+        target: "https://api.github.com",
+        changeOrigin: true,
+        secure: true,
+        pathRewrite: {
+          "^/github-api": "",
+        },
+        onProxyRes: (proxyRes) => {
+          delete proxyRes.headers["content-encoding"];
+          delete proxyRes.headers["content-length"];
+        },
+      },
+    },
+  },
 });

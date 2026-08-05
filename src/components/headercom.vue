@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
   <timer></timer>
@@ -10,7 +11,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons-vue";
 import { MenuProps } from "ant-design-vue";
-import timer from "@/components/timerCom/timerCom.vue"
+import timer from "@/components/timerCom/timerCom.vue";
 const current = ref<string[]>(["mail"]);
 const items = ref<MenuProps["items"]>([
   {

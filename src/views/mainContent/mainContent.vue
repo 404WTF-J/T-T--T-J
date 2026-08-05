@@ -10,8 +10,10 @@
         ❤
       </div>
     </div>
-    <div class="mainContent">
+    <div class="timerBox">
       <timer></timer>
+    </div>
+    <div class="contentLayout">
       <div class="poembox">
         <div class="poem3" v-if="currentPoem">
           <h3>{{ currentPoem.title }}</h3>
@@ -21,66 +23,69 @@
             </p>
           </div>
         </div>
-
-        <div class="contentList">
-          <div
-            class="Messageboard picareabtn"
-            id="messageboard"
-            @click="gomessagePage"
-          >
-            <span>留言板</span>
-          </div>
-          <div class="picareabtn" id="picareabtn" @click="gopicareaPage">
-            <span>more</span>
-          </div>
+      </div>
+      <div class="contentList">
+        <div
+          class="Messageboard picareabtn"
+          id="messageboard"
+          @click="gomessagePage"
+        >
+          <span>留言板</span>
+        </div>
+        <div class="picareabtn" id="todoBtn" @click="gotodoPage">
+          <span>同见证</span>
+        </div>
+        <div class="picareabtn" id="picareabtn" @click="gopicareaPage">
+          <span>more</span>
         </div>
       </div>
-      <div class="musicbox">
-        <div class="Letterbox" id="letterBtn" @click="goletterPage">
-          <svg
-            t="1775633628065"
-            class="icon"
-            viewBox="0 0 1024 1024"
-            version="1.1"
-            width="20"
-            height="20"
+    </div>
+
+    <div class="musicbox">
+      <div class="Letterbox" id="letterBtn" @click="goletterPage">
+        <svg
+          t="1775633628065"
+          class="icon"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          width="20"
+          height="20"
+        >
+          <path
+            d="M799 158c87.482 0 158.566 70.209 159.979 157.354L959 318v388c0 87.482-70.209 158.566-157.354 159.979L799 866H225c-87.482 0-158.566-70.209-159.979-157.354L65 706V318c0-87.482 70.209-158.566 157.354-159.979L225 158h574z m-645.757 96.228l-0.165 0.184c-14.824 16.754-23.884 38.726-24.078 62.81V706c0 52.49 42.125 95.14 94.412 95.987L225 802h574c52.49 0 95.14-42.125 95.987-94.412L895 706V318c0-24.473-9.157-46.806-24.232-63.762a58.864 58.864 0 0 1-11.949 13.794l-0.63 0.526-244.521 201.22c-58.474 48.119-142.57 48.6-201.556 1.443l-1.78-1.443-244.52-201.22a58.971 58.971 0 0 1-12.57-14.33zM802 514.485c17.496 0 31.713 14.042 31.996 31.471l0.004 0.53v27.163c0 88.22-70.802 159.905-158.683 161.33l-2.668 0.021h-32.273c-17.673 0-32-14.327-32-32 0-17.496 14.042-31.713 31.47-31.996l0.53-0.004h32.273c53.228 0 96.478-42.718 97.338-95.741l0.013-1.61v-27.164c0-17.673 14.327-32 32-32zM806.753 228H217.246l233.753 192.36c34.734 28.582 84.534 29.151 119.868 1.706l1.066-0.84 1.068-0.867L806.753 228z"
+            fill="#979797"
+            p-id="16626"
+          ></path>
+        </svg>
+      </div>
+      <div class="ListenBox" id="listenBtn" @click="gosinerPage">
+        特别的人
+        <span class="music-note">♪</span>
+      </div>
+      <div class="musicBox">
+        <audio
+          ref="audioRef"
+          :src="audioSrc"
+          loop
+          controls
+          @timeupdate="onTimeUpdate"
+          class="audio"
+        ></audio>
+        <div class="poemBox" ref="poemBoxRef">
+          <ul
+            class="poemList"
+            ref="poemListRef"
+            :style="{ transform: `translateY(${-offset}px)` }"
           >
-            <path
-              d="M799 158c87.482 0 158.566 70.209 159.979 157.354L959 318v388c0 87.482-70.209 158.566-157.354 159.979L799 866H225c-87.482 0-158.566-70.209-159.979-157.354L65 706V318c0-87.482 70.209-158.566 157.354-159.979L225 158h574z m-645.757 96.228l-0.165 0.184c-14.824 16.754-23.884 38.726-24.078 62.81V706c0 52.49 42.125 95.14 94.412 95.987L225 802h574c52.49 0 95.14-42.125 95.987-94.412L895 706V318c0-24.473-9.157-46.806-24.232-63.762a58.864 58.864 0 0 1-11.949 13.794l-0.63 0.526-244.521 201.22c-58.474 48.119-142.57 48.6-201.556 1.443l-1.78-1.443-244.52-201.22a58.971 58.971 0 0 1-12.57-14.33zM802 514.485c17.496 0 31.713 14.042 31.996 31.471l0.004 0.53v27.163c0 88.22-70.802 159.905-158.683 161.33l-2.668 0.021h-32.273c-17.673 0-32-14.327-32-32 0-17.496 14.042-31.713 31.47-31.996l0.53-0.004h32.273c53.228 0 96.478-42.718 97.338-95.741l0.013-1.61v-27.164c0-17.673 14.327-32 32-32zM806.753 228H217.246l233.753 192.36c34.734 28.582 84.534 29.151 119.868 1.706l1.066-0.84 1.068-0.867L806.753 228z"
-              fill="#979797"
-              p-id="16626"
-            ></path>
-          </svg>
-        </div>
-        <div class="ListenBox" id="listenBtn" @click="gosinerPage">
-          特别的人
-          <span class="music-note">♪</span>
-        </div>
-        <div class="musicBox">
-          <audio
-            ref="audioRef"
-            :src="audioSrc"
-            loop
-            controls
-            @timeupdate="onTimeUpdate"
-            class="audio"
-          ></audio>
-          <div class="poemBox" ref="poemBoxRef">
-            <ul
-              class="poemList"
-              ref="poemListRef"
-              :style="{ transform: `translateY(${-offset}px)` }"
+            <li
+              :ref="(el) => setLiRefs(el, index)"
+              v-for="(line, index) in lyrics"
+              :key="index"
+              :class="{ active: index === currentIndex }"
             >
-              <li
-                :ref="(el) => setLiRefs(el, index)"
-                v-for="(line, index) in lyrics"
-                :key="index"
-                :class="{ active: index === currentIndex }"
-              >
-                {{ line.text }}
-              </li>
-            </ul>
-          </div>
+              {{ line.text }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -131,37 +136,6 @@ const cutPoem = (poemStr) => {
       .filter((line) => line.length > 0),
   };
 };
-
-//控制poem的显示
-const poems = [
-  {
-    title: "嗨喽 TT 又见面啦",
-    lines: [
-      "如星伴月夜长明，",
-      "似水年华同舟行。",
-      "岁月静好常相伴，",
-      "心灯一盏照温情。",
-    ],
-  },
-  {
-    title: "嗨，TT！",
-    lines: [
-      "遇见你大概是生活给我开的",
-      "最靠谱的一次盲盒",
-      "打开后发现正是我想要的",
-      "现在我要将你收入囊中 嘿嘿",
-    ],
-  },
-  {
-    title: "叮！你的忠粉来啦",
-    lines: [
-      "和你的聊天记录",
-      "是我唯一不会左滑删除的对话框",
-      "因为每次打开都像",
-      "拆开一包快乐薯片 (ฅ´ω`ฅ)",
-    ],
-  },
-];
 
 const currentPoem = ref(null);
 
@@ -275,9 +249,14 @@ const goletterPage = () => {
   router.push("/Letter");
 };
 
+// 跳转到todo页
+const gotodoPage = () => {
+  router.push("/Togethertodo");
+};
+
 onMounted(async () => {
   // 持续调用创建爱心函数
-  // setInterval(createHearts, 300);
+  setInterval(createHearts, 300);
 
   // 获取诗句
   const res = await getHomePoems();
@@ -314,21 +293,15 @@ onUnmounted(() => {
 </script>
 
 <style>
+:root {
+  --contentLayoutHeight: 20%;
+}
 .maincontentbox {
   width: 100%;
   height: 100vh;
   position: relative;
   overflow: hidden;
   background: linear-gradient(to right, #dbe6f6, #c5796d);
-}
-
-.mainContent {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .hearts {
@@ -345,6 +318,27 @@ onUnmounted(() => {
   opacity: 0.7;
 }
 
+.timerBox {
+  position: relative;
+  height: 25%;
+}
+
+.contentLayout {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: calc(95% - var(--contentLayoutHeight));
+}
+
+.contentList {
+  width: 100%;
+  position: absolute;
+  bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 @keyframes heartFall {
   0% {
     transform: translateY(-100%);
@@ -359,6 +353,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 12%;
 }
 
 .poem1,
@@ -368,9 +363,8 @@ onUnmounted(() => {
   font-size: 1.2em;
   text-align: center;
   line-height: 1.8;
-  max-width: 600px;
+  max-width: 500px;
   padding: 0 20px;
-  margin-top: 130px;
 }
 
 .poem1,
@@ -441,15 +435,6 @@ onUnmounted(() => {
   /* background-color: #0a0a0a; */
 }
 
-.contentList {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 40px;
-}
-
 .picareabtn {
   width: 80px;
   height: 30px;
@@ -473,7 +458,7 @@ onUnmounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .ListenBox {
     display: block;
   }

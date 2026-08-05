@@ -139,7 +139,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .timer-container {
-  position: fixed;
+  /* position: fixed; */
+  position: absolute;
   top: 70px;
   left: 65px;
   transform-style: preserve-3d;
@@ -272,6 +273,19 @@ onBeforeUnmount(() => {
     opacity: 0.5;
     display: none;
     /* background-color: #0a0a0a; */
+  }
+}
+
+@media (min-width: 540px) {
+  .timer-container {
+    top: 70px;
+    left: 115px;
+  }
+}
+@media (max-width: 344px) {
+  .timer-container {
+    top: 70px;
+    left: 36px;
   }
 }
 

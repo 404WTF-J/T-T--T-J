@@ -5,8 +5,8 @@ export const STORAGE_KEY_CONFIG = "love_partner_config";
 
 export const DEFAULT_CONFIG = {
   nickA: "404",
-  nickB: "梨花头",
-  avatarA: "🌙",
+  nickB: "1376",
+  avatarA: "☀️",
   avatarB: "☀️",
 };
 
@@ -67,6 +67,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const TABLE_NAME = "MessageChat";
 const LETTER_TABLE = "LetterChat";
 const Home_Poems = "HomePoems";
+const Must_Dolist = "MustDolist";
 
 /**
  * 获取所有留言
@@ -250,5 +251,115 @@ export async function getHomePoems() {
   }
 }
 
+// ==========================================
+// MustDolist (必做清单) 相关逻辑
+// ==========================================
+
+// 获取所有必做清单
+// 【改造】CloudStore.js 中 getMustDolist 改造示例
+export async function getMustDolist({
+  page = 1,
+  pageSize = 12,
+  status = "all",
+}) {
+  try {
+    let query = supabase
+      .from(Must_Dolist)
+      .select("*", { count: "exact" }) // 【改造】count:"exact" 让 supabase 顺带返回总数
+      .order("created_at", { ascending: false });
+
+    // 【改造-新增】根据筛选状态加条件
+    if (status === "completed") {
+      query = query.eq("completed", true);
+    } else if (status === "notCompleted") {
+      query = query.eq("completed", false);
+    }
+
+    // 【改造-新增】分页核心：range(from, to)
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+    if (error) throw error;
+
+    return {
+      data: (data || []).map((item) => ({
+        id: item.id,
+        title: item.title,
+        img: item.img,
+        imgDetail: item.imgDetail,
+        completed: item.completed,
+        isProcessing: item.isProcessing,
+        created_at: item.created_at,
+      })),
+      total: count || 0, // 【改造-新增】总条数返回给前端分页组件用
+    };
+  } catch (error) {
+    console.error("加载清单列表失败:", error);
+    return { data: [], total: 0 };
+  }
+}
+
+// 向必做清单中添加新项
+export async function addMustDoItem(
+  title,
+  img,
+  imgDetail,
+  completed,
+  isProcessing
+) {
+  try {
+    const { data, error } = await supabase
+      .from(Must_Dolist)
+      .insert([{ title, img, imgDetail, completed, isProcessing }])
+      .select();
+
+    if (error) throw error;
+
+    return data[0];
+  } catch (error) {
+    console.error("添加清单项失败:", error);
+    return null;
+  }
+}
+
+// 【新增】更新已有任务的图片/完成状态，用于用户上传真实图片后持久化保存
+export async function updateMustDoItem(id, updates) {
+  try {
+    const { data, error } = await supabase
+      .from(Must_Dolist)
+      .update(updates) // updates 是一个对象，比如 { img, imgDetail, completed }
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+    return data[0];
+  } catch (error) {
+    console.error("更新清单项失败:", error);
+    return null;
+  }
+}
+
+// 【查询】获取全部完成数据用于统计，只查 completed 字段，减少传输体积
+export async function getMustDoCompeleteNum() {
+  try {
+    // 【改造】只 select completed 字段，不要 img/imgDetail 这些大字段，
+    // 100条数据只传 completed 状态，开销可以忽略不计
+    const { data, error } = await supabase
+      .from(Must_Dolist)
+      .select("completed");
+
+    if (error) throw error;
+
+    const total = data.length;
+    const completedCount = data.filter((item) => item.completed).length;
+
+    return { total, completedCount };
+  } catch (error) {
+    console.error("获取统计数据失败:", error);
+    return { total: 0, completedCount: 0 };
+  }
+}
 // 导出 supabase 实例供其他用途
 export { supabase };

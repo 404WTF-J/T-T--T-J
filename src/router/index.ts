@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "messageBoard",
     component: () => import("@/views/messageBoard/messageBoard.vue"),
   },
+  {
+    path: "/Togethertodo",
+    name: "togethertodo",
+    component: () => import("@/views/togetherToDo/togetherToDo.vue"),
+  },
 ];
 
 const router = createRouter({

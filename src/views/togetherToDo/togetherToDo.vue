@@ -28,7 +28,7 @@
       </div>
       <!-- 标题与进度 -->
       <div class="title-area">
-        <h3 class="banneertitle">恋爱清单</h3>
+        <h3 class="banneertitle">爱恋清单</h3>
         <div class="competebox">
           <span class="progress"
             >已完成 {{ state.completedCount }} / {{ state.totalCount }}</span

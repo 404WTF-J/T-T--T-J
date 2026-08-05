@@ -2,11 +2,12 @@
   "name": "tt",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@barba/core": "^2.10.3",

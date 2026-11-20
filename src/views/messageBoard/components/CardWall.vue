@@ -110,30 +110,53 @@ function toggleFlip(cardId) {
   flippedCards.value = newSet;
 }
 
+// function deleteCard(msgId) {
+//   Modal.confirm({
+//     title: "确认删除",
+//     icon: createVNode(ExclamationCircleOutlined),
+//     content: "确定要删除这张卡片吗？",
+//     okText: "确定",
+//     cancelText: "取消",
+//     async onOk() {
+//       try {
+//         // 1. 调用后端删除
+//         const success = await deleteMessage(msgId);
+
+//         if (success) {
+//           message.success("删除成功");
+//           flippedCards.value.delete(msgId);
+
+//           // 2. 通知父组件刷新
+//           // 为了解决闪烁，建议父组件收到 refresh 后，先本地过滤掉这个 ID，再去请求云端
+//           emit("refresh", msgId);
+//         }
+//       } catch (error) {
+//         message.error("删除失败，请重试");
+//         console.error(error);
+//       }
+//     },
+//     onCancel() {
+//       message.info("已取消删除");
+//     },
+//   });
+// }
+
+// 不删留言处理
 function deleteCard(msgId) {
   Modal.confirm({
     title: "确认删除",
     icon: createVNode(ExclamationCircleOutlined),
-    content: "确定要删除这张卡片吗？",
+    content: "oh oh 😭，确定要删除这张卡片吗？",
     okText: "确定",
     cancelText: "取消",
     async onOk() {
-      try {
-        // 1. 调用后端删除
-        const success = await deleteMessage(msgId);
-
-        if (success) {
-          message.success("删除成功");
-          flippedCards.value.delete(msgId);
-
-          // 2. 通知父组件刷新
-          // 为了解决闪烁，建议父组件收到 refresh 后，先本地过滤掉这个 ID，再去请求云端
-          emit("refresh", msgId);
-        }
-      } catch (error) {
-        message.error("删除失败，请重试");
-        console.error(error);
-      }
+      Modal.confirm({
+        title: "再想想😢",
+        icon: createVNode(ExclamationCircleOutlined),
+        content: "梨花头说不可以删噢",
+        okText: "哼",
+        cancelText: "🌹",
+      });
     },
     onCancel() {
       message.info("已取消删除");

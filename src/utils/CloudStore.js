@@ -68,6 +68,7 @@ const TABLE_NAME = "MessageChat";
 const LETTER_TABLE = "LetterChat";
 const Home_Poems = "HomePoems";
 const Must_Dolist = "MustDolist";
+const Todo_Banner = "TodoBanner";
 
 /**
  * 获取所有留言
@@ -361,5 +362,52 @@ export async function getMustDoCompeleteNum() {
     return { total: 0, completedCount: 0 };
   }
 }
+
+// ==============恋爱清单背景图处理===============
+
+// 获取恋爱清单背景图
+export async function getTodobannerUrl() {
+  try {
+    const { data, error } = await supabase
+      .from(Todo_Banner)
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) return [];
+    return data.map((item) => ({
+      bannerUrl: item.bannerUrl,
+    }));
+  } catch (error) {
+    console.error("加载背景图失败:", error);
+  }
+}
+
+// 上传恋爱清单背景图
+export async function uploadTodoBannerUrl(bannerUrl, timestamp) {
+  console.log("上传背景图:", {
+    bannerUrl,
+    timestamp,
+    createdAt: new Date(timestamp).toISOString(),
+  });
+  if (!bannerUrl) return;
+  //【关键】毫秒时间戳 → ISO 字符串，Supabase timestamptz 才能正确存
+  const createdAt = new Date(timestamp).toISOString();
+  try {
+    const { data, error } = await supabase
+      .from(Todo_Banner)
+      .upsert([{ id: 1, created_at: createdAt, bannerUrl }], {
+        onConflict: "id",
+      });
+
+    if (error) throw error;
+    console.log("远端banner同步成功:");
+    return data;
+  } catch (error) {
+    console.error("上传背景图失败:", error);
+  }
+}
+
 // 导出 supabase 实例供其他用途
 export { supabase };

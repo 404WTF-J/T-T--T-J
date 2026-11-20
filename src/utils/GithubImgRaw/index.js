@@ -12,9 +12,12 @@ const BRANCH = process.env.VUE_APP_GITHUB_BRANCH || "main";
  * @returns {string} 图片的 GitHub raw 地址
  */
 
-export async function uploadImageToGitHub(fileOrBase64, targetPath) {
-  const url = `/github-api/repos/${OWNER}/${REPO}/contents/Togetherdo/${targetPath}`;
-  console.log("【上传-1】开始，url:", url);
+export async function uploadImageToGitHub(fileOrBase64, targetPath, bgkey) {
+  // 【改造-新增】bgkey参数，用于区分上传到不同目录
+  console.log("【上传-0】开始,bgkey:", bgkey);
+  const folder = bgkey == "0" ? "TodoBanner" : "Togetherdo";
+  const url = `/github-api/repos/${OWNER}/${REPO}/contents/${folder}/${targetPath}`;
+  console.log("【上传-1】开始,url:", url);
 
   if (!GITHUB_TOKEN || !OWNER || !REPO) {
     throw new Error("请先配置 GitHub 相关环境变量");
@@ -90,7 +93,7 @@ export async function uploadImageToGitHub(fileOrBase64, targetPath) {
   // console.log("剩余额度:", putRes.headers["x-ratelimit-remaining"]);
   // console.log("额度上限:", putRes.headers["x-ratelimit-limit"]);
 
-  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/Togetherdo/${targetPath}`;
+  return `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${folder}/${targetPath}`;
 }
 
 // export async function uploadImageToGitHub(fileOrBase64, targetPath) {

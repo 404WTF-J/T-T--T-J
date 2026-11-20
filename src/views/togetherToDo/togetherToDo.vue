@@ -277,8 +277,8 @@ import deafaultbanner from "@/assets/todoAssets/banner.jpeg";
 const router = useRouter();
 
 onMounted(async () => {
-  // await fetchList();
-  // await fetchComplelteNum();
+  await fetchList();
+  await fetchComplelteNum();
   state.bannerUrl = localStorage.getItem("bannerUrl") || deafaultbanner;
   try {
     const newbgUrl = await getTodobannerUrl();
